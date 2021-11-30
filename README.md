@@ -26,4 +26,4 @@ This task is inspired by Adam Chlipala's tasks for the
 "Certified Programming with Dependent Types" (CPDT) book, 
 http://adam.chlipala.net/cpdt/ .
 
-The aim of this work is to show programming skills and have a bit fun.
+The aim of this work is to show programming skills and have a bit of fun.
