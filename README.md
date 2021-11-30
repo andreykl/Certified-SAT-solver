@@ -11,14 +11,14 @@ to implement unit propagation and pure literal elimination for this
 algorithm. 
 
 The idea of the algorithm:
-    * Basing on formula variable list build a list of all possible 
-       valuations for the formula.
-    * Take this valuations one by one and check the formula using each
-       valuation. If we face the valuation on which the formula evaluates to
-       true, this means we have what we need. Otherwise, when after checking 
-       all the possible valuations we haven't found the valuation on which
-       the formula evaluates to true, this means that for all possible 
-       valuations formula evaluates to false.
+* Basing on formula variable list build a list of all possible 
+  valuations for the formula.
+* Take this valuations one by one and check the formula using each
+  valuation. If we face the valuation on which the formula evaluates to
+  true, this means we have what we need. Otherwise, when after checking 
+  all the possible valuations we haven't found the valuation on which
+  the formula evaluates to true, this means that for all possible 
+  valuations formula evaluates to false.
 	   
 For more information about the algorithm see comments in code.
 
