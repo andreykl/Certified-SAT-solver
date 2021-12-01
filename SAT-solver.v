@@ -57,6 +57,37 @@ Fixpoint formulaDenote (truth : valuation) (f : formula) : bool :=
   | Fdis f1 f2 => formulaDenote truth f1 || formulaDenote truth f2
   end.
 
+(* Specification for `formulaDenote` *)
+Inductive formulaDenoteSpec : valuation -> formula -> bool -> Set :=
+| SpecLit vl v :
+    formulaDenoteSpec vl (Flit v) (vl v)
+| SpecNeg vl f b :
+    formulaDenoteSpec vl f b ->
+    formulaDenoteSpec vl (Fneg f) (~~b)
+| SpecDis1 vl f1 f2 :
+    formulaDenoteSpec vl f1 true ->
+    formulaDenoteSpec vl (Fdis f1 f2) true
+| SpecDis2 vl f1 f2 b2 :
+    formulaDenoteSpec vl f1 false ->
+    formulaDenoteSpec vl f2 b2 ->
+    formulaDenoteSpec vl (Fdis f1 f2) b2
+| SpecConj1 vl f1 f2 :
+    formulaDenoteSpec vl f1 false ->
+    formulaDenoteSpec vl (Fcon f1 f2) false
+| SpecConj2 vl f1 f2 b2 :
+    formulaDenoteSpec vl f1 true ->
+    formulaDenoteSpec vl f2 b2 ->
+    formulaDenoteSpec vl (Fcon f1 f2) b2.
+
+(* Proof that `formulaDenote` satisfy to the specification above *)
+Lemma formulaDenoteCorrect  vl f : formulaDenoteSpec vl f (formulaDenote vl f).
+  elim: f => /= [ v | f | f1 H1 f2 H2 | f1 H1 f2 H2 ];
+    [ by constructor
+    | by constructor
+    | case E: (formulaDenote vl f1) => //=; constructor => //;
+        by move: H1; rewrite E .. ].
+Defined.
+
 (* Add variable with value to the valuation. *)
 Definition add_val (x : var) (value : bool) (vl : valuation) : valuation :=
   fun v => if v == x then value else vl v.
@@ -456,9 +487,6 @@ Eval compute in solveFormula (Fdis (Flit 1) (Fneg (Flit 1))).
 Adding CNF predicate , so this is CNF solver now,
 https://en.wikipedia.org/wiki/Conjunctive_normal_form
 *)
-(* Inductive cnfLit : formula -> Set := CnfLit v : cnfLit (Flit v). *)
-(* Inductive cnfNeg f : cnfLit f -> Set := CnfNeg cnflit : cnfNeg cnflit. *)
-
 Inductive cnfClause : formula -> Set :=
 | clLit v : cnfClause (Flit v)
 | clNeg v : cnfClause (Fneg (Flit v))
