@@ -7,7 +7,8 @@ valuations for the formula.
 This is NOT a backtracking algorithm described on wikipedia.
 This is just another one. It looks to me like it is not easy thing
 to implement unit propagation and pure literal elimination for this
-algorithm. 
+algorithm. But the second step of algorithm should be easy to perform in
+parallel mode.
 
 The idea of the algorithm:
     1. Basing on formula variable list build a list of all possible 
@@ -217,7 +218,7 @@ Notation "'\complete(' vrs ')' vls" :=
 (* value `b` on all valuations from the list, this means that formula `f` *)
 (* evaluates to value `b` on all valuations. *)
 (* Just a direct consequence from the completeness definition given above. *)
-Lemma list_complete__no_more_valuations f vrs vls :
+Corollary list_complete__no_more_valuations f vrs vls :
   \complete(vrs) vls ->
   forall b, (forall vl, vl \in(vrs) vls -> formulaDenote vl f == b) ->
        forall vl, formulaDenote vl f == b.
@@ -450,3 +451,24 @@ Defined.
 
 Eval compute in solveFormula (Fcon (Flit 1) (Fneg (Flit 1))).
 Eval compute in solveFormula (Fdis (Flit 1) (Fneg (Flit 1))).
+
+(* 
+Adding CNF predicate , so this is CNF solver now,
+https://en.wikipedia.org/wiki/Conjunctive_normal_form
+*)
+(* Inductive cnfLit : formula -> Set := CnfLit v : cnfLit (Flit v). *)
+(* Inductive cnfNeg f : cnfLit f -> Set := CnfNeg cnflit : cnfNeg cnflit. *)
+
+Inductive cnfClause : formula -> Set :=
+| clLit v : cnfClause (Flit v)
+| clNeg v : cnfClause (Fneg (Flit v))
+| clDis f1 f2 of cnfClause f1 & cnfClause f2 : cnfClause (Fdis f1 f2).
+
+Inductive cnformula : formula -> Set :=
+| clBase f of cnfClause f : cnformula f
+| clCon f1 f2 of cnformula f1 & cnformula f2 : cnformula (Fcon f1 f2).
+
+Definition solveCNFormula f (cnf : cnformula f) :
+  {truth | formulaDenote truth f} + {forall truth, ~~formulaDenote truth f} :=
+  solveFormula f.
+
