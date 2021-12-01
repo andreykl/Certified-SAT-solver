@@ -484,19 +484,19 @@ Eval compute in solveFormula (Fcon (Flit 1) (Fneg (Flit 1))).
 Eval compute in solveFormula (Fdis (Flit 1) (Fneg (Flit 1))).
 
 (* 
-Adding CNF predicate , so this is CNF solver now,
+Adding CNF predicate , so this is simple verified CNF solver now,
 https://en.wikipedia.org/wiki/Conjunctive_normal_form
 *)
-Inductive cnfClause : formula -> Set :=
-| clLit v : cnfClause (Flit v)
-| clNeg v : cnfClause (Fneg (Flit v))
-| clDis f1 f2 of cnfClause f1 & cnfClause f2 : cnfClause (Fdis f1 f2).
+Inductive clause : formula -> Set :=
+| clLit v : clause (Flit v)
+| clNeg v : clause (Fneg (Flit v))
+| clDis f1 f2 of clause f1 & clause f2 : clause (Fdis f1 f2).
 
-Inductive cnformula : formula -> Set :=
-| clBase f of cnfClause f : cnformula f
-| clCon f1 f2 of cnformula f1 & cnformula f2 : cnformula (Fcon f1 f2).
+Inductive cnf : formula -> Set :=
+| clBase f of clause f : cnf f
+| clCon f1 f2 of cnf f1 & cnf f2 : cnf (Fcon f1 f2).
 
-Definition solveCNFormula f (cnf : cnformula f) :
+Definition solveCNFFormula f (_ : cnf f) :
   {truth | formulaDenote truth f} + {forall truth, ~~formulaDenote truth f} :=
   solveFormula f.
 
