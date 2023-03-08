@@ -6,7 +6,7 @@ This algorithm implements full exhaustive search using list of all possible
 valuations for the formula.
 
 This is NOT a backtracking algorithm described in wikipedia.
-This is just another one. It looks to me like it is not easy thing
+This is just another (naive) one. It looks to me like it is not easy thing
 to implement unit propagation and pure literal elimination for this
 algorithm. 
 
