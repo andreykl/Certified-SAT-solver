@@ -20,7 +20,7 @@ The idea of the algorithm:
   the formula evaluates to true, this means that for all possible 
   valuations formula evaluates to false.
 	   
-For more information about the algorithm see comments in code.
+For more information about the prove see comments in code.
 
 This task is inspired by Adam Chlipala's tasks for the 
 "Certified Programming with Dependent Types" (CPDT) book, 
